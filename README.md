@@ -6,7 +6,7 @@ This build strips out heavy desktop environments in favor of a specialized "kios
 
 ## Features
 * **Auto-Scaling (noVNC + Matchbox):** The internal desktop automatically resizes to match your host browser window dimensions on the fly.
-* **Always Updated:** The Dockerfile programmatically scrapes the Tor Project to download the latest available Linux release on build.
+* **Always Updated:** The Dockerfile programmatically scrapes the Tor Project to download the latest available Linux release on build.  The Docker Hub image will also be updated during this process.
 * **Fullscreen Experience:** Auto-disables Tor's default "letterboxing" privacy feature to ensure the browser utilizes 100% of your screen space.
 * **Passwordless Local Access:** Bypasses basic authentication for frictionless access on trusted local networks.
 
@@ -37,6 +37,9 @@ You can pull the ready-to-use image directly from Docker Hub without needing to 
 If you prefer to inspect the code and build the image locally:
 
 1. Clone this repository and navigate to the directory.
+   ```bash
+   git clone https://github.com/hanafytech/custom-tor.git
+   cd custom-tor
 2. Build and start the container:
    ```bash
    docker compose up -d --build 

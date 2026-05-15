@@ -1,6 +1,6 @@
 # Dockerized Kiosk Tor Browser
 
-A lightweight, fully isolated Tor Browser running in a Docker container, accessible via any web browser.
+A lightweight, fully isolated Tor Browser running in a Docker container, accessible via any web browser. 
 
 This build strips out heavy desktop environments in favor of a specialized "kiosk" window manager. It dynamically scales to fit your browser window, creating a seamless, native-feeling application experience.
 
@@ -12,26 +12,50 @@ This build strips out heavy desktop environments in favor of a specialized "kios
 
 ## Setup & Installation
 
+### Option 1: Quick Start (Pre-built Image)
+You can pull the ready-to-use image directly from Docker Hub without needing to clone the repository or build it from scratch.
+
+1. Create a `docker-compose.yml` file:
+   ```yaml
+   services:
+     tor-browser:
+       image: hanafytech/custom-tor:latest
+       container_name: custom-tor
+       ports:
+         - "5800:8080"
+       environment:
+         - MOZ_DISABLE_CONTENT_SANDBOX=1
+       shm_size: '512m'
+       restart: unless-stopped
+   
+
+2. Start the container:
+   ```bash
+   docker compose up -d
+   
+### Option 2: Build from Source
+If you prefer to inspect the code and build the image locally:
+
 1. Clone this repository and navigate to the directory.
 2. Build and start the container:
    ```bash
-   docker compose up -d --build
+   docker compose up -d --build 
 
-```
-3. Open your web browser and navigate to:
-   `http://localhost:5800` *(Replace `localhost` with your server's IP if accessing remotely).*
+## Usage
+Open your web browser and navigate to:
+`http://localhost:5800` *(Replace `localhost` with your server's IP if accessing remotely).*
 
 ## Security Notice: The Firefox Sandbox Warning
 
-When opening the Tor Browser, you may notice a warning stating: *"Some of Tor Browser's security features may offer less protection on your current operating system."*
+When opening the Tor Browser, you may notice a warning stating: *"Some of Tor Browser's security features may offer less protection on your current operating system."* 
 
 **This is expected behavior.**
 
 Tor (built on Firefox) attempts to use Linux kernel features (`clone` and `unshare`) to build a security sandbox around web pages. However, Docker's default security profile (`seccomp`) actively blocks these system calls to maintain strong container isolation.
 
-We have explicitly disabled the browser's internal sandbox using `MOZ_DISABLE_CONTENT_SANDBOX=1` in the `docker-compose.yml`.
+We have explicitly disabled the browser's internal sandbox using `MOZ_DISABLE_CONTENT_SANDBOX=1` in the `docker-compose.yml`. 
 
 **Why we do this:**
-* **Defense in Depth:** The browser is already running as a non-root user (`toruser`) inside an isolated Docker container.
-* **The Trade-off:** To make the browser's internal sandbox work, we would have to run the container with `security_opt: seccomp=unconfined`, exposing the host's kernel to over 40 dangerous system calls.
+* **Defense in Depth:** The browser is already running as a non-root user (`toruser`) inside an isolated Docker container. 
+* **The Trade-off:** To make the browser's internal sandbox work, we would have to run the container with `security_opt: seccomp=unconfined`, exposing the host's kernel to over 40 dangerous system calls. 
 * **Conclusion:** We prioritize Docker's robust container isolation over the browser's internal sandboxing. The container itself acts as the sandbox.

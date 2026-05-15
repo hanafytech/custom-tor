@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  tor-browser:
+    build: .
+    image: hanafytech/custom-tor:latest
+    container_name: custom-tor
+    ports:
+      - "5800:8080"
+    environment:
+      - MOZ_DISABLE_CONTENT_SANDBOX=1
+    shm_size: '512m'
+    restart: unless-stopped
